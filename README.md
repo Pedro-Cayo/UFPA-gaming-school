@@ -15,6 +15,8 @@ Além disto é bom ter um editor para trabalhar com o código como [VSCode](http
 
 #### 🎲 Rodando o Backend (servidor)
 
+```bash
+
 # Clone este repositório
 $ git clone git@github.com:Pedro-Cayo/UFPA-gaming-school.git
 
@@ -28,8 +30,11 @@ $ npm install
 $ npm run dev
 
 # O servidor inciará na porta:5000 - acesse http://localhost:5000
+```
 
 #### Rodando a aplicação web (Frontend)
+
+```bash
 
 # Clone este repositório
 $ git@github.com:Pedro-Cayo/UFPA-gaming-school.git
@@ -44,3 +49,4 @@ $ npm install
 $ npm run start
 
 # A aplicação será aberta na porta:3000 - acesse http://localhost:3000
+```
