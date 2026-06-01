@@ -1,19 +1,19 @@
 const jwt = require("jsonwebtoken");
 
-const User = require("../models/User");
+const Professor = require("../models/Professor");
 
-// get user by jwt token
+// get professor by jwt token
 const getUserByToken = async (token) => {
   if (!token) return res.status(401).json({ error: "Acesso negado!" });
 
-  // find user
+  // find professor
   const decoded = jwt.verify(token, "nossosecret");
 
-  const userId = decoded.id;
+  const professorId = decoded.id;
 
-  const user = await User.findOne({ _id: userId });
+  const professor = await Professor.findOne({ _id: professorId });
 
-  return user;
+  return professor;
 };
 
 module.exports = getUserByToken;

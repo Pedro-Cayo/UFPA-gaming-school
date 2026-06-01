@@ -48,7 +48,7 @@ module.exports = class PetController {
 
     // get user
     const token = getToken(req)
-    const user = await getUserByToken(token)
+    const profesor = await getUserByToken(token)
 
     // create pet
     const pet = new Pet({
@@ -59,11 +59,11 @@ module.exports = class PetController {
       color: color,
       available: available,
       images: [],
-      user: {
-        _id: user._id,
-        name: user.name,
-        image: user.image,
-        phone: user.phone,
+      professor: {
+        _id: profesor._id,
+        name: profesor.name,
+        image: profesor.image,
+        phone: profesor.phone,
       },
     })
 
@@ -96,9 +96,9 @@ module.exports = class PetController {
   static async getAllUserPets(req, res) {
     // get user
     const token = getToken(req)
-    const user = await getUserByToken(token)
+    const profesor = await getUserByToken(token)
 
-    const pets = await Pet.find({ 'user._id': user._id })
+    const pets = await Pet.find({ 'professor._id': profesor._id })
 
     res.status(200).json({
       pets,
@@ -109,9 +109,9 @@ module.exports = class PetController {
   static async getAllUserAdoptions(req, res) {
     // get user
     const token = getToken(req)
-    const user = await getUserByToken(token)
+    const profesor = await getUserByToken(token)
 
-    const pets = await Pet.find({ 'adopter._id': user._id })
+    const pets = await Pet.find({ 'adopter._id': profesor._id })
 
     res.status(200).json({
       pets,
@@ -161,9 +161,9 @@ module.exports = class PetController {
 
     // check if user registered this pet
     const token = getToken(req)
-    const user = await getUserByToken(token)
+    const profesor = await getUserByToken(token)
 
-    if (pet.user._id.toString() != user._id.toString()) {
+    if (pet.professor._id.toString() != profesor._id.toString()) {
       res.status(404).json({
         message:
           'Houve um problema em processar sua solicitação, tente novamente mais tarde!',
@@ -269,11 +269,11 @@ module.exports = class PetController {
 
     // check if user owns this pet
     const token = getToken(req)
-    const user = await getUserByToken(token)
+    const profesor = await getUserByToken(token)
 
     console.log(pet)
 
-    if (pet.user._id.equals(user._id)) {
+    if (pet.professor._id.equals(profesor._id)) {
       res.status(422).json({
         message: 'Você não pode agendar uma visita com seu próprio Pet!',
       })
@@ -282,7 +282,7 @@ module.exports = class PetController {
 
     // check if user has already adopted this pet
     if (pet.adopter) {
-      if (pet.adopter._id.equals(user._id)) {
+      if (pet.adopter._id.equals(profesor._id)) {
         res.status(422).json({
           message: 'Você já agendou uma visita para este Pet!',
         })
@@ -292,9 +292,9 @@ module.exports = class PetController {
 
     // add user to pet
     pet.adopter = {
-      _id: user._id,
-      name: user.name,
-      image: user.image,
+      _id: profesor._id,
+      name: profesor.name,
+      image: profesor.image,
     }
 
     console.log(pet)

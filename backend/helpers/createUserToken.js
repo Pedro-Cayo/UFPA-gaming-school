@@ -1,11 +1,11 @@
 const jwt = require("jsonwebtoken");
 
-const createUserToken = async (user, req, res) => {
+const createUserToken = async (professor, req, res) => {
   const token = jwt.sign(
     // payload data
     {
-      name: user.name,
-      id: user._id,
+      name: professor.name,
+      id: professor._id,
     },
     "nossosecret"
   );
@@ -14,7 +14,7 @@ const createUserToken = async (user, req, res) => {
   res.status(200).json({
     message: "Você está autenticado!",
     token: token,
-    userId: user._id,
+    userId: professor._id,
   });
 };
 

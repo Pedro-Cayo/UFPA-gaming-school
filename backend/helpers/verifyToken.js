@@ -15,7 +15,7 @@ const checkToken = (req, res, next) => {
     try {
 
         const verified = jwt.verify(token, 'nossosecret')
-        req.user = verified
+        req.professor = verified
         next()
         
     } catch (error) {
