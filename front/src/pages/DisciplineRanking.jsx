@@ -6,6 +6,7 @@ import { ArrowLeft, Trophy, User } from 'lucide-react';
 
 export default function DisciplineRanking() {
   const { disciplineId } = useParams();
+  console.log('disciplineId from URL:', disciplineId);
   const { user } = useAuth();
   const navigate = useNavigate();
   const [discipline, setDiscipline] = useState(null);
@@ -19,6 +20,10 @@ export default function DisciplineRanking() {
     }
     loadData();
   }, [disciplineId, user, navigate]);
+
+  const handleGoBack = () => {
+    navigate(-1); // Volta para a página anterior no histórico
+  };
 
   const loadData = async () => {
     try {
@@ -66,14 +71,17 @@ export default function DisciplineRanking() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-ufpa-50 to-ufpa-100">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
-      <header className="bg-gradient-to-r from-ufpa-600 to-ufpa-800 text-white shadow-lg">
+      <header className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg">
         <div className="max-w-6xl mx-auto px-4 py-6">
-          <Link to={`/aluno/disciplina/${disciplineId}`} className="flex items-center gap-2 hover:opacity-80 mb-4">
+          <button
+            onClick={handleGoBack}
+            className="flex items-center gap-2 hover:opacity-80 mb-4 bg-blue-700 hover:bg-blue-800 px-3 py-2 rounded transition"
+          >
             <ArrowLeft size={20} />
             Voltar
-          </Link>
+          </button>
           <div className="flex items-center gap-3">
             <Trophy size={32} />
             <div>
@@ -93,13 +101,13 @@ export default function DisciplineRanking() {
         ) : (
           <div className="space-y-4">
             {ranking.map((student, index) => {
-              const isCurrentUser = user && user.id === student.studentId;
+              const isCurrentUser = user && user.id === student._id;
               return (
                 <div
-                  key={student.studentId}
+                  key={student._id}
                   className={`rounded-lg shadow-lg p-6 transition ${
                     isCurrentUser
-                      ? 'bg-gradient-to-r from-ufpa-100 to-ufpa-50 border-2 border-ufpa-600'
+                      ? 'bg-gradient-to-r from-blue-100 to-blue-50 border-2 border-blue-600'
                       : 'bg-white hover:shadow-xl'
                   }`}
                 >
@@ -113,7 +121,7 @@ export default function DisciplineRanking() {
                       {/* Student Info */}
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
-                          <div className="w-12 h-12 bg-gradient-to-br from-ufpa-600 to-ufpa-800 rounded-full flex items-center justify-center text-white font-bold">
+                          <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold">
                             {student.studentPhoto ? (
                               <img src={student.studentPhoto} alt={student.studentName} className="w-full h-full rounded-full object-cover" />
                             ) : (
@@ -121,9 +129,9 @@ export default function DisciplineRanking() {
                             )}
                           </div>
                           <div>
-                            <h3 className="text-lg font-bold text-ufpa-700">
+                            <h3 className="text-lg font-bold text-blue-700">
                               {student.studentName}
-                              {isCurrentUser && <span className="ml-2 text-sm bg-ufpa-600 text-white px-2 py-1 rounded">Você</span>}
+                              {isCurrentUser && <span className="ml-2 text-sm bg-blue-600 text-white px-2 py-1 rounded">Você</span>}
                             </h3>
                           </div>
                         </div>
@@ -132,16 +140,13 @@ export default function DisciplineRanking() {
 
                     {/* Stats */}
                     <div className="text-right">
-                      <div className="text-2xl font-bold text-ufpa-700">
-                        {student.totalScore.toFixed(1)}
+                      <div className="text-2xl font-bold text-blue-700">
+                        {student.score}
                       </div>
                       <p className="text-sm text-gray-600">pontos</p>
-                      <p className="text-xs text-gray-500 mt-2">
-                        {student.answersCount} {student.answersCount === 1 ? 'resposta' : 'respostas'}
-                      </p>
                       {student.totalTime > 0 && (
-                        <p className="text-xs text-gray-500">
-                          {Math.floor(student.totalTime / 60)}m {student.totalTime % 60}s
+                        <p className="text-xs text-gray-500 mt-2">
+                          Tempo: {student.totalTime}s
                         </p>
                       )}
                     </div>

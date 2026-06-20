@@ -31,8 +31,8 @@ function App() {
           {/* Student Routes */}
           <Route path="/aluno" element={<StudentDashboard />} />
           <Route path="/aluno/perfil" element={<StudentProfile />} />
+          <Route path="/aluno/disciplina/:disciplineId/ranking" element={<DisciplineRanking />} />
           <Route path="/aluno/disciplina/:id" element={<StudentDisciplineDetail />} />
-          <Route path="/aluno/disciplina/:id/ranking" element={<DisciplineRanking />} />
           <Route path="/aluno/ranking-geral" element={<GeneralRanking />} />
           <Route path="/aluno/responder/:questionnaireId" element={<AnswerQuestionnaire />} />
           

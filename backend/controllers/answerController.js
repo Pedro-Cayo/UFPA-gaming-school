@@ -1,5 +1,6 @@
 import Answer from '../models/Answer.js';
 import Questionnaire from '../models/Questionnaire.js';
+import mongoose from 'mongoose';
 
 export async function submitAnswers(req, res) {
   try {
@@ -105,7 +106,7 @@ export async function getRankingByDiscipline(req, res) {
     
     // Agregar respostas por aluno
     const ranking = await Answer.aggregate([
-      { $match: { disciplineId: require('mongoose').Types.ObjectId(disciplineId) } },
+      { $match: { disciplineId: new mongoose.Types.ObjectId(disciplineId) } },
       {
         $group: {
           _id: '$studentId',
@@ -126,10 +127,11 @@ export async function getRankingByDiscipline(req, res) {
       { $unwind: '$student' },
       {
         $project: {
-          _id: 0,
+          _id: '$_id',
           studentId: '$_id',
           studentName: '$student.name',
           studentPhoto: '$student.photoUrl',
+          score: '$totalScore',
           totalScore: 1,
           totalTime: 1,
           answersCount: 1
@@ -168,7 +170,7 @@ export async function getGeneralRanking(req, res) {
       { $unwind: '$student' },
       {
         $project: {
-          _id: 0,
+          _id: '$_id',
           studentId: '$_id',
           studentName: '$student.name',
           studentPhoto: '$student.photoUrl',

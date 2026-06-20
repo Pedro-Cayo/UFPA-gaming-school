@@ -40,7 +40,7 @@ export const answerService = {
   submit: (data) => api.post('/answers/submit', data),
   getMyAnswers: () => api.get('/answers/my-answers'),
   getByDiscipline: (disciplineId) => api.get(`/answers/discipline/${disciplineId}`),
-  getRankingByDiscipline: (disciplineId) => api.get(`/answers/ranking/discipline/${disciplineId}`),
+  getRankingByDiscipline: (disciplineId) => api.get(`/answers/ranking/${disciplineId}`),
   getGeneralRanking: () => api.get('/answers/ranking/general')
 };
 

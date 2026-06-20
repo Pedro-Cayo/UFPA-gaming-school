@@ -83,10 +83,10 @@ export default function GeneralRanking() {
         ) : (
           <div className="space-y-4">
             {ranking.map((student, index) => {
-              const isCurrentUser = user && user.id === student.studentId;
+              const isCurrentUser = user && user.id === student._id;
               return (
                 <div
-                  key={student.studentId}
+                  key={student._id}
                   className={`rounded-lg shadow-lg p-6 transition ${
                     isCurrentUser
                       ? 'bg-gradient-to-r from-ufpa-100 to-ufpa-50 border-2 border-ufpa-600'
