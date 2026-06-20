@@ -10,8 +10,8 @@ export default function GeneralRanking() {
   const [ranking, setRanking] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (!user || user.userType !== 'aluno') {
+    useEffect(() => {
+    if (!user || (user.userType !== 'aluno' && user.userType !== 'professor')) {
       navigate('/login');
       return;
     }
@@ -60,7 +60,7 @@ export default function GeneralRanking() {
       {/* Header */}
       <header className="bg-gradient-to-r from-ufpa-600 to-ufpa-800 text-white shadow-lg">
         <div className="max-w-6xl mx-auto px-4 py-6">
-          <Link to="/aluno" className="flex items-center gap-2 hover:opacity-80 mb-4">
+          <Link to="/" className="flex items-center gap-2 hover:opacity-80 mb-4">
             <ArrowLeft size={20} />
             Voltar
           </Link>

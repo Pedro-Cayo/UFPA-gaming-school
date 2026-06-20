@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { disciplineService } from '../services/api';
-import { BookOpen, Trophy, LogOut } from 'lucide-react';
+import { BookOpen, Trophy, LogOut, Home } from 'lucide-react';
 
 export default function StudentDashboard() {
   const { user, logout } = useAuth();
@@ -40,8 +40,15 @@ export default function StudentDashboard() {
       <header className="bg-gradient-to-r from-ufpa-600 to-ufpa-800 text-white shadow-lg">
         <div className="max-w-6xl mx-auto px-4 py-6 flex justify-between items-center">
           <h1 className="text-3xl font-bold">Painel do Aluno</h1>
-          <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-4">
             <span className="text-sm">{user?.name}</span>
+            <Link
+              to="/"
+              className="flex items-center gap-2 bg-ufpa-400 hover:bg-ufpa-500 px-4 py-2 rounded-lg transition font-semibold"
+            >
+              <Home size={18} />
+              Home
+            </Link>
             <Link
               to="/aluno/perfil"
               className="bg-ufpa-500 hover:bg-ufpa-600 px-4 py-2 rounded-lg transition font-semibold"
