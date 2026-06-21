@@ -1,20 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { answerService } from '../services/api';
+import { answerService, disciplineService, questionnaireService } from '../services/api';
 import { Trophy, BookOpen, ArrowLeft, User, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function Home() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [disciplines, setDisciplines] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [ranking, setRanking] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
   const [showDisciplines, setShowDisciplines] = useState(false);
+  const [disciplinesWithAnswers, setDisciplinesWithAnswers] = useState([]);
+  const [professorDisciplines, setProfessorDisciplines] = useState([]);
+  const [loadingDisciplines, setLoadingDisciplines] = useState(false);
+  const [showProfessorDisciplines, setShowProfessorDisciplines] = useState(false);
   
   // Estados para ranking geral (sem login)
   const [generalRanking, setGeneralRanking] = useState([]);
   const [loadingRanking, setLoadingRanking] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
   // Carregar ranking geral quando não há login
@@ -237,7 +241,7 @@ export default function Home() {
             uniqueDisciplines[answer.disciplineId._id] = answer.disciplineId;
           }
         });
-        setDisciplines(Object.values(uniqueDisciplines));
+        setDisciplinesWithAnswers(Object.values(uniqueDisciplines));
       } catch (error) {
         console.error('Erro ao carregar disciplinas:', error);
       } finally {
@@ -331,16 +335,16 @@ export default function Home() {
               </h2>
               {loading ? (
                 <div className="text-center text-gray-600">Carregando disciplinas...</div>
-              ) : disciplines.length === 0 ? (
+              ) : disciplinesWithAnswers.length === 0 ? (
                 <div className="text-center text-gray-600 py-8">
                   Você ainda não respondeu questionários em nenhuma disciplina
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {disciplines.map((discipline) => (
-                    <Link
+                  {disciplinesWithAnswers.map((discipline) => (
+                    <div
                       key={discipline._id}
-                      to={`/aluno/disciplina/${discipline._id}/ranking`}
+                      onClick={() => navigate(`/aluno/disciplina/${discipline._id}/selector`)}
                       className="bg-gradient-to-br from-ufpa-50 to-ufpa-100 rounded-lg shadow-lg p-6 hover:shadow-xl hover:scale-105 transition transform cursor-pointer border-2 border-ufpa-200"
                     >
                       <div className="flex items-start gap-3">
@@ -351,7 +355,7 @@ export default function Home() {
                           <p className="text-xs text-gray-600 mt-2">Clique para ver o ranking</p>
                         </div>
                       </div>
-                    </Link>
+                    </div>
                   ))}
                 </div>
               )}
@@ -364,15 +368,31 @@ export default function Home() {
 
      // Se o usuário está logado como professor, mostrar painel de rankings
   if (user.userType === 'professor') {
-    const [professorDisciplines, setProfessorDisciplines] = useState([]);
-    const [loadingDisciplines, setLoadingDisciplines] = useState(false);
-    const [showProfessorDisciplines, setShowProfessorDisciplines] = useState(false);
-
-    const loadProfessorDisciplines = async () => {
+      const loadProfessorDisciplines = async () => {
       setLoadingDisciplines(true);
       try {
         const response = await disciplineService.getMyDisciplines();
-        setProfessorDisciplines(response.data);
+        const allDisciplines = response.data;
+        
+        // Filtrar apenas disciplinas que têm questionários
+        const disciplinesWithQuestions = await Promise.all(
+          allDisciplines.map(async (discipline) => {
+            try {
+              const questionsResponse = await questionnaireService.getByDiscipline(discipline._id);
+              // Se tem questionários, inclui a disciplina
+              if (questionsResponse.data && questionsResponse.data.length > 0) {
+                return discipline;
+              }
+              return null;
+            } catch (error) {
+              return null;
+            }
+          })
+        );
+        
+        // Remove nulos (disciplinas sem questionários)
+        const filtered = disciplinesWithQuestions.filter(d => d !== null);
+        setProfessorDisciplines(filtered);
       } catch (error) {
         console.error('Erro ao carregar disciplinas do professor:', error);
       } finally {
@@ -461,7 +481,7 @@ export default function Home() {
                   {professorDisciplines.map((discipline) => (
                     <Link
                       key={discipline._id}
-                      to={`/aluno/disciplina/${discipline._id}/ranking`}
+                      to={`/aluno/disciplina/${discipline._id}/selector`}
                       className="bg-gradient-to-br from-ufpa-50 to-ufpa-100 rounded-lg shadow-lg p-6 hover:shadow-xl hover:scale-105 transition transform cursor-pointer border-2 border-ufpa-200"
                     >
                       <div className="flex items-start gap-3">

@@ -158,7 +158,7 @@ export async function getGeneralRanking(req, res) {
           totalTime: { $sum: '$totalTime' }
         }
       },
-      { $sort: { totalAnswers: -1, totalScore: -1, totalTime: 1 } },
+      { $sort: { totalScore: -1, totalAnswers: -1, totalTime: 1 } },
       {
         $lookup: {
           from: 'users',
@@ -185,5 +185,57 @@ export async function getGeneralRanking(req, res) {
   } catch (error) {
     console.error('Erro ao buscar ranking geral:', error);
     res.status(500).json({ error: 'Erro ao buscar ranking geral' });
+  }
+}
+
+// Obter ranking por questionário específico
+export async function getRankingByQuestionnaire(req, res) {
+  try {
+    const { questionnaireId } = req.params;
+    console.log('Buscando ranking para questionário:', questionnaireId);
+
+    const ranking = await Answer.aggregate([
+      {
+        $match: {
+          questionnaireId: new mongoose.Types.ObjectId(questionnaireId)
+        }
+      },
+      {
+        $group: {
+          _id: '$studentId',
+          score: { $sum: '$totalScore' },
+          totalTime: { $sum: '$totalTime' },
+          studentName: { $first: '$studentName' }
+        }
+      },
+      {
+        $sort: { score: -1, totalTime: 1 }
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'student'
+        }
+      },
+      { $unwind: '$student' },
+      {
+        $project: {
+          _id: '$_id',
+          studentId: '$_id',
+          studentName: '$student.name',
+          studentPhoto: '$student.photoUrl',
+          score: 1,
+          totalTime: 1
+        }
+      }
+    ]);
+
+    console.log('Ranking encontrado:', ranking);
+    res.json(ranking);
+  } catch (error) {
+    console.error('Erro ao buscar ranking por questionário:', error);
+    res.status(500).json({ message: 'Erro ao buscar ranking' });
   }
 }

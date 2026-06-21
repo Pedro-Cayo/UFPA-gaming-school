@@ -41,6 +41,7 @@ export const answerService = {
   getMyAnswers: () => api.get('/answers/my-answers'),
   getByDiscipline: (disciplineId) => api.get(`/answers/discipline/${disciplineId}`),
   getRankingByDiscipline: (disciplineId) => api.get(`/answers/ranking/${disciplineId}`),
+  getRankingByQuestionnaire: (questionnaireId) => api.get(`/answers/ranking/questionnaire/${questionnaireId}`),
   getGeneralRanking: () => api.get('/answers/ranking/general')
 };
 

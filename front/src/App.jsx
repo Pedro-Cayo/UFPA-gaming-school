@@ -14,6 +14,7 @@ import StudentProfile from './pages/StudentProfile'
 import AnswerQuestionnaire from './pages/AnswerQuestionnaire'
 import GeneralRanking from './pages/GeneralRanking'
 import DisciplineRanking from './pages/DisciplineRanking'
+import DisciplineQuestionnaireSelector from './pages/DisciplineQuestionnaireSelector';
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
           {/* Student Routes */}
           <Route path="/aluno" element={<StudentDashboard />} />
           <Route path="/aluno/perfil" element={<StudentProfile />} />
+          <Route path="/aluno/disciplina/:disciplineId/selector" element={<DisciplineQuestionnaireSelector />} />
           <Route path="/aluno/disciplina/:disciplineId/ranking" element={<DisciplineRanking />} />
           <Route path="/aluno/disciplina/:id" element={<StudentDisciplineDetail />} />
           <Route path="/aluno/ranking-geral" element={<GeneralRanking />} />

@@ -4,7 +4,8 @@ import {
   getStudentAnswers,
   getAnswersByDiscipline,
   getRankingByDiscipline,
-  getGeneralRanking
+  getGeneralRanking,
+  getRankingByQuestionnaire
 } from '../controllers/answerController.js';
 import { authenticateToken, authenticateStudent } from '../helpers/auth.js';
 
@@ -13,6 +14,7 @@ const router = express.Router();
 router.post('/submit', authenticateStudent, submitAnswers);
 router.get('/my-answers', authenticateStudent, getStudentAnswers);
 router.get('/discipline/:disciplineId', authenticateStudent, getAnswersByDiscipline);
+router.get('/ranking/questionnaire/:questionnaireId', getRankingByQuestionnaire);
 router.get('/ranking/general', getGeneralRanking);
 router.get('/ranking/:disciplineId', authenticateToken, getRankingByDiscipline);
 

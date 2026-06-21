@@ -13,8 +13,8 @@ export default function DisciplineRanking() {
   const [ranking, setRanking] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (!user || user.userType !== 'aluno') {
+    useEffect(() => {
+    if (!user || (user.userType !== 'aluno' && user.userType !== 'professor')) {
       navigate('/login');
       return;
     }
@@ -25,11 +25,16 @@ export default function DisciplineRanking() {
     navigate(-1); // Volta para a página anterior no histórico
   };
 
-  const loadData = async () => {
+    const loadData = async () => {
     try {
+      const queryParams = new URLSearchParams(window.location.search);
+      const questionnaireId = queryParams.get('questionnaireId');
+      
       const [disciplineRes, rankingRes] = await Promise.all([
         disciplineService.getById(disciplineId),
-        answerService.getRankingByDiscipline(disciplineId)
+        questionnaireId 
+          ? answerService.getRankingByQuestionnaire(questionnaireId)
+          : answerService.getRankingByDiscipline(disciplineId)
       ]);
       setDiscipline(disciplineRes.data);
       setRanking(rankingRes.data);
