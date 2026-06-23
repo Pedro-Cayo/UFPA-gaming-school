@@ -70,7 +70,7 @@ export default function Home() {
         {/* Header */}
         <header className="bg-gradient-to-r from-ufpa-600 to-ufpa-800 text-white shadow-lg">
           <div className="max-w-6xl mx-auto px-4 py-6 flex justify-between items-center">
-            <h1 className="text-3xl font-bold">UFPA Gamificação - Ranking Geral</h1>
+            <h1 className="text-3xl font-bold">Study Ranking</h1>
             <div className="flex gap-4">
               <Link
                 to="/sobre"
@@ -341,12 +341,12 @@ export default function Home() {
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {disciplinesWithAnswers.map((discipline) => (
-                    <div
-                      key={discipline._id}
-                      onClick={() => navigate(`/aluno/disciplina/${discipline._id}/selector`)}
-                      className="bg-gradient-to-br from-ufpa-50 to-ufpa-100 rounded-lg shadow-lg p-6 hover:shadow-xl hover:scale-105 transition transform cursor-pointer border-2 border-ufpa-200"
-                    >
+  {disciplinesWithAnswers.map((discipline) => (
+    <div
+      key={discipline._id}
+      onClick={() => navigate(`/aluno/disciplina/${discipline._id}/selector`)}
+      className="bg-gradient-to-br from-ufpa-50 to-ufpa-100 rounded-xl shadow-premium card-hover p-6 cursor-pointer border-2 border-ufpa-200"
+    >
                       <div className="flex items-start gap-3">
                         <BookOpen className="text-ufpa-600 mt-1" size={28} />
                         <div className="flex-1">

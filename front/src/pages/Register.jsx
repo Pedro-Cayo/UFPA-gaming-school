@@ -5,13 +5,13 @@ import { useAuth } from '../contexts/AuthContext';
 export default function Register() {
   const [userType, setUserType] = useState('aluno');
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    phone: '',
-    cnpj: '',
-    matricula: ''
-  });
+  name: '',
+  email: '',
+  password: '',
+  phone: '',
+  matricula: ''
+});
+
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { register } = useAuth();
@@ -25,31 +25,30 @@ export default function Register() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
+  e.preventDefault();
+  setError('');
+  setLoading(true);
 
-    try {
-      const data = {
-        ...formData,
-        userType,
-        cnpj: userType === 'professor' ? formData.cnpj : undefined,
-        matricula: userType === 'aluno' ? formData.matricula : undefined
-      };
+  try {
+    const data = {
+      ...formData,
+      userType,
+      matricula: formData.matricula
+    };
 
-      await register(data);
-      
-      if (userType === 'professor') {
-        navigate('/professor');
-      } else {
-        navigate('/aluno');
-      }
-    } catch (err) {
-      setError(err.error || 'Erro ao registrar');
-    } finally {
-      setLoading(false);
+    await register(data);
+    
+    if (userType === 'professor') {
+      navigate('/professor');
+    } else {
+      navigate('/aluno');
     }
-  };
+  } catch (err) {
+    setError(err.error || 'Erro ao registrar');
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-ufpa-600 to-ufpa-800 flex items-center justify-center py-8">
@@ -133,34 +132,20 @@ export default function Register() {
               />
             </div>
 
-            {/* CNPJ ou Matrícula */}
-            {userType === 'professor' ? (
-              <div>
-                <label className="block text-gray-700 font-semibold mb-2">CNPJ</label>
-                <input
-                  type="text"
-                  name="cnpj"
-                  value={formData.cnpj}
-                  onChange={handleChange}
-                  placeholder="XX.XXX.XXX/XXXX-XX"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-ufpa-600"
-                  required
-                />
-              </div>
-            ) : (
-              <div>
-                <label className="block text-gray-700 font-semibold mb-2">Matrícula (12 dígitos)</label>
-                <input
-                  type="text"
-                  name="matricula"
-                  value={formData.matricula}
-                  onChange={handleChange}
-                  placeholder="XXXXXXXXXXXX"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-ufpa-600"
-                  required
-                />
-              </div>
-            )}
+            {/* Matrícula (para ambos) */}
+<div>
+  <label className="block text-gray-700 font-semibold mb-2">Matrícula</label>
+  <input
+    type="text"
+    name="matricula"
+    value={formData.matricula}
+    onChange={handleChange}
+    placeholder="000000000000"
+    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-ufpa-600"
+    required
+  />
+  <p className="text-xs text-gray-500 mt-1">12 dígitos</p>
+</div>
 
             {/* Senha */}
             <div>

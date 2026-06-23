@@ -1,38 +1,87 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { ArrowLeft, User, Mail, Phone, LogOut } from 'lucide-react';
+import { ArrowLeft, User, Mail, Phone, LogOut, Save } from 'lucide-react';
+import { authService } from '../services/api';
 
 export default function StudentProfile() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [photoPreview, setPhotoPreview] = useState(user?.photoUrl || null);
   const [uploading, setUploading] = useState(false);
+  const [hasChanges, setHasChanges] = useState(false);
 
   if (!user || user.userType !== 'aluno') {
     navigate('/login');
     return null;
   }
 
-  const handlePhotoChange = async (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setUploading(true);
-      try {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setPhotoPreview(reader.result);
-          // Aqui você poderia enviar a foto para o servidor
-          // await api.post('/upload-photo', { photo: reader.result })
-        };
-        reader.readAsDataURL(file);
-      } catch (error) {
-        console.error('Erro ao fazer upload:', error);
-      } finally {
-        setUploading(false);
-      }
+const handlePhotoChange = async (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    try {
+      // Redimensionar imagem
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+      
+      img.onload = () => {
+        // Definir tamanho máximo
+        const maxWidth = 300;
+        const maxHeight = 300;
+        let width = img.width;
+        let height = img.height;
+        
+        // Calcular novo tamanho mantendo proporção
+        if (width > height) {
+          if (width > maxWidth) {
+            height = Math.round((height * maxWidth) / width);
+            width = maxWidth;
+          }
+        } else {
+          if (height > maxHeight) {
+            width = Math.round((width * maxHeight) / height);
+            height = maxHeight;
+          }
+        }
+        
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(img, 0, 0, width, height);
+        
+        // Converter para base64 com qualidade reduzida
+        const resizedImage = canvas.toDataURL('image/jpeg', 0.7);
+        setPhotoPreview(resizedImage);
+        setHasChanges(true);
+      };
+      
+      // Ler arquivo como Data URL
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      console.error('Erro ao fazer upload:', error);
     }
-  };
+  }
+};
+
+const handleSavePhoto = async () => {
+  if (!photoPreview || !hasChanges) return;
+  
+  setUploading(true);
+  try {
+    await authService.updateProfilePhoto(photoPreview);
+    setHasChanges(false);
+    alert('Foto atualizada com sucesso!');
+  } catch (error) {
+    console.error('Erro ao salvar foto:', error);
+    alert('Erro ao salvar foto');
+  } finally {
+    setUploading(false);
+  }
+};
 
   const handleLogout = async () => {
     await logout();
@@ -67,7 +116,7 @@ export default function StudentProfile() {
               </div>
             </div>
 
-            <label className="bg-gradient-to-r from-ufpa-600 to-ufpa-700 text-white px-6 py-2 rounded-lg hover:from-ufpa-700 hover:to-ufpa-800 transition font-semibold cursor-pointer inline-block">
+            <label className="bg-gradient-to-r from-ufpa-600 to-ufpa-700 text-white px-6 py-2 rounded-lg hover:from-ufpa-700 hover:to-ufpa-800 transition font-semibold cursor-pointer inline-block mb-4">
               {uploading ? 'Enviando...' : 'Alterar Foto'}
               <input
                 type="file"
@@ -77,6 +126,17 @@ export default function StudentProfile() {
                 className="hidden"
               />
             </label>
+
+            {hasChanges && (
+              <button
+                onClick={handleSavePhoto}
+                disabled={uploading}
+                className="ml-4 bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg transition font-semibold flex items-center gap-2 inline-flex"
+              >
+                <Save size={20} />
+                {uploading ? 'Salvando...' : 'Salvar Foto'}
+              </button>
+            )}
           </div>
 
           {/* User Info */}

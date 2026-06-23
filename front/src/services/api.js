@@ -12,7 +12,8 @@ export const authService = {
   register: (data) => api.post('/auth/register', data),
   login: (data) => api.post('/auth/login', data),
   logout: () => api.post('/auth/logout'),
-  getProfile: () => api.get('/auth/profile')
+  getProfile: () => api.get('/auth/profile'),
+  updateProfilePhoto: (photoUrl) => api.put('/auth/update-photo', { photoUrl })
 };
 
 // Disciplines

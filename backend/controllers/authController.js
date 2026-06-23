@@ -1,14 +1,14 @@
 import bcrypt from 'bcrypt';
 import User from '../models/User.js';
 import { generateToken } from '../helpers/auth.js';
-import { isValidCNPJ, isValidMatricula, isValidEmail, isValidPhone } from '../helpers/validators.js';
+import {isValidMatricula, isValidEmail, isValidPhone } from '../helpers/validators.js';
 
 export async function register(req, res) {
   try {
-    const { name, email, password, phone, userType, cnpj, matricula } = req.body;
+    const { name, email, password, phone, userType, matricula } = req.body;
     
     // Validações básicas
-    if (!name || !email || !password || !phone || !userType) {
+    if (!name || !email || !password || !phone || !userType || !matricula) {
       return res.status(400).json({ error: 'Campos obrigatórios faltando' });
     }
     
@@ -20,15 +20,11 @@ export async function register(req, res) {
       return res.status(400).json({ error: 'Telefone inválido' });
     }
     
-    if (userType === 'professor') {
-      if (!cnpj || !isValidCNPJ(cnpj)) {
-        return res.status(400).json({ error: 'CNPJ inválido' });
-      }
-    } else if (userType === 'aluno') {
-      if (!matricula || !isValidMatricula(matricula)) {
-        return res.status(400).json({ error: 'Matrícula deve conter 12 dígitos' });
-      }
-    } else {
+    if (!isValidMatricula(matricula)) {
+      return res.status(400).json({ error: 'Matrícula deve conter 12 dígitos' });
+    }
+    
+    if (userType !== 'professor' && userType !== 'aluno') {
       return res.status(400).json({ error: 'Tipo de usuário inválido' });
     }
     
@@ -48,8 +44,7 @@ export async function register(req, res) {
       password: hashedPassword,
       phone,
       userType,
-      cnpj: userType === 'professor' ? cnpj : undefined,
-      matricula: userType === 'aluno' ? matricula : undefined
+      matricula
     });
     
     await user.save();
@@ -141,5 +136,31 @@ export async function getProfile(req, res) {
   } catch (error) {
     console.error('Erro ao obter perfil:', error);
     res.status(500).json({ error: 'Erro ao obter perfil' });
+  }
+}
+
+export async function updateProfilePhoto(req, res) {
+  try {
+    const userId = req.user.id;
+    const { photoUrl } = req.body;
+    
+    if (!photoUrl) {
+      return res.status(400).json({ error: 'Foto não fornecida' });
+    }
+    
+    // Atualizar usuário com a nova foto
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { photoUrl },
+      { new: true }
+    ).select('-password');
+    
+    res.json({
+      message: 'Foto atualizada com sucesso',
+      user
+    });
+  } catch (error) {
+    console.error('Erro ao atualizar foto:', error);
+    res.status(500).json({ error: 'Erro ao atualizar foto' });
   }
 }

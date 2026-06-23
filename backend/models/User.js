@@ -23,13 +23,11 @@ const userSchema = new mongoose.Schema({
     enum: ['professor', 'aluno'],
     required: true
   },
-  cnpj: {
-    type: String,
-    sparse: true
-  },
   matricula: {
     type: String,
-    sparse: true
+    sparse: true,
+    required: true,
+    unique: true
   },
   photoUrl: {
     type: String,
