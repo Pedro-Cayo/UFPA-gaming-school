@@ -19,6 +19,7 @@ const answerSchema = new mongoose.Schema({
   answers: [{
     questionId: mongoose.Schema.Types.ObjectId,
     selectedAnswer: String,
+    correctAnswer: { type: String, required: true },
     isCorrect: Boolean,
     points: Number,
     timeSpent: Number

@@ -37,6 +37,7 @@ export async function submitAnswers(req, res) {
       return {
         questionId: answer.questionId,
         selectedAnswer: answer.selectedAnswer,
+        correctAnswer: question.correctAnswer, // <-- AGORA ESTAMOS SALVANDO A RESPOSTA CERTA AQUI!
         isCorrect,
         points,
         timeSpent: answer.timeSpent || 0

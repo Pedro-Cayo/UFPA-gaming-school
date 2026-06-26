@@ -103,3 +103,230 @@ code {
 .btn-premium:hover::before {
   left: 100%;
 }
+
+/* Componentes Gamificados */
+.glass-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+}
+
+.glass-card-dark {
+  background: rgba(10, 47, 168, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(25, 85, 255, 0.2);
+  border-radius: 12px;
+}
+
+.medal-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 18px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.medal-gold {
+  background: linear-gradient(135deg, #faca15 0%, #eab308 100%);
+  color: #78350f;
+  box-shadow: 0 0 20px rgba(250, 204, 21, 0.4);
+}
+
+.medal-silver {
+  background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+  color: #374151;
+  box-shadow: 0 0 15px rgba(229, 231, 235, 0.4);
+}
+
+.medal-bronze {
+  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  color: #fff;
+  box-shadow: 0 0 15px rgba(217, 119, 6, 0.4);
+}
+
+/* Cards de Ranking */
+.rank-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  border-left: 4px solid #1955ff;
+  transition: all 0.3s ease;
+}
+
+.rank-card:hover {
+  transform: translateX(4px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.rank-card.top-3 {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(233, 238, 255, 0.9) 100%);
+}
+
+/* Badges de Gamificação */
+.badge-achievement {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #1955ff 0%, #0d3dd4 100%);
+  color: white;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(25, 85, 255, 0.3);
+}
+
+.badge-achievement.gold {
+  background: linear-gradient(135deg, #faca15 0%, #eab308 100%);
+  color: #78350f;
+}
+
+.badge-achievement.success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+}
+
+/* Botões Gamificados */
+.btn-game {
+  position: relative;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-game:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.btn-game:active {
+  transform: translateY(0);
+}
+
+.btn-game-primary {
+  background: linear-gradient(135deg, #1955ff 0%, #0d3dd4 100%);
+  color: white;
+}
+
+.btn-game-secondary {
+  background: linear-gradient(135deg, #faca15 0%, #eab308 100%);
+  color: #78350f;
+}
+
+.btn-game-success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+}
+
+/* Seções com Fundo */
+.section-overlay {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(8px);
+  border-radius: 16px;
+  padding: 2rem;
+}
+
+/* Headers Gamificados */
+.header-game {
+  background: linear-gradient(135deg, #1955ff 0%, #0d3dd4 100%);
+  color: white;
+  box-shadow: 0 10px 30px rgba(25, 85, 255, 0.2);
+}
+
+/* Tabelas Gamificadas */
+.table-game thead {
+  background: linear-gradient(135deg, #1955ff 0%, #0d3dd4 100%);
+  color: white;
+}
+
+.table-game tbody tr {
+  border-bottom: 1px solid rgba(25, 85, 255, 0.1);
+  transition: all 0.2s ease;
+}
+
+.table-game tbody tr:hover {
+  background: rgba(25, 85, 255, 0.05);
+}
+
+.table-game tbody tr.top-1 {
+  background: rgba(250, 204, 21, 0.1);
+}
+
+.table-game tbody tr.top-2 {
+  background: rgba(229, 231, 235, 0.1);
+}
+
+.table-game tbody tr.top-3 {
+  background: rgba(217, 119, 6, 0.1);
+}
+
+/* Indicadores de Progresso */
+.progress-bar-game {
+  height: 8px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar-game-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #1955ff 0%, #4777ff 100%);
+  transition: width 0.3s ease;
+}
+
+/* Ícones com Efeito */
+.icon-game {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  transition: all 0.3s ease;
+}
+
+.icon-game:hover {
+  transform: scale(1.1) rotate(5deg);
+  filter: drop-shadow(0 0 8px rgba(25, 85, 255, 0.4));
+}
+
+/* Animações Adicionais */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.shimmer {
+  animation: shimmer 2s infinite;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0) 100%);
+  background-size: 1000px 100%;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .section-overlay {
+    padding: 1.5rem;
+  }
+  
+  .glass-card {
+    border-radius: 8px;
+  }
+  
+  .btn-game {
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+  }
+}

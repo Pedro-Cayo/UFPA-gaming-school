@@ -2,10 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { disciplineService, questionnaireService } from '../services/api';
-import { ArrowLeft, Trophy, FileText } from 'lucide-react';
+import { Trophy, FileText, Zap, Star } from 'lucide-react';
+import GameCard from '../components/GameCard';
+import GameHeader from '../components/GameHeader';
 
 export default function DisciplineQuestionnaireSelector() {
-  const { disciplineId } = useParams();
+  const params = useParams();
+  const disciplineId = params.disciplineId || params.id; // Suporte a múltiplos nomes de parâmetro
   const { user } = useAuth();
   const navigate = useNavigate();
   const [discipline, setDiscipline] = useState(null);
@@ -36,78 +39,127 @@ export default function DisciplineQuestionnaireSelector() {
   };
 
   if (loading) {
-    return <div className="text-center text-gray-600 py-8">Carregando...</div>;
+    return (
+      <div className="min-h-screen">
+        <GameHeader 
+          title="Carregando..."
+          showLogo={true}
+          showBack={true}
+          backTo={user?.userType === 'professor' ? '/professor' : '/aluno'}
+        />
+        <main className="max-w-6xl mx-auto px-4 py-12">
+          <div className="text-center py-12">
+            <div className="inline-block animate-spin mb-4">
+              <Zap className="text-ufpa-600" size={32} />
+            </div>
+            <p className="text-gray-600 font-medium">Carregando rankings...</p>
+          </div>
+        </main>
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-ufpa-50 to-ufpa-100">
-      {/* Header */}
-      <header className="bg-gradient-to-r from-ufpa-600 to-ufpa-800 text-white shadow-lg">
-        <div className="max-w-6xl mx-auto px-4 py-6">
-          <button
-            onClick={() => navigate(-1)}
-            className="flex items-center gap-2 hover:opacity-80 mb-4 bg-ufpa-500 hover:bg-ufpa-600 px-3 py-2 rounded transition"
-          >
-            <ArrowLeft size={20} />
-            Voltar
-          </button>
-          <div className="flex items-center gap-3">
-            <Trophy size={32} />
-            <div>
-              <h1 className="text-3xl font-bold">{discipline?.name}</h1>
-              <p className="text-sm opacity-90">{discipline?.code}</p>
-            </div>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen">
+      {/* Header Gamificado */}
+      <GameHeader 
+        title={`Rankings - ${discipline?.name || 'Carregando...'}`}
+        subtitle={discipline?.code || ''}
+        showLogo={true}
+        showBack={true}
+        backTo={user?.userType === 'professor' ? '/professor' : '/aluno'}
+        icon={<Trophy size={32} />}
+      />
 
       {/* Main Content */}
       <main className="max-w-6xl mx-auto px-4 py-8">
-        <div className="space-y-6">
+        <div className="space-y-8">
           {/* Ranking Geral */}
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <Trophy className="text-gamify-gold" size={28} />
+              Ranking Geral
+            </h2>
             <Link
               to={`/aluno/disciplina/${disciplineId}/ranking`}
-              className="block bg-gradient-to-br from-yellow-400 to-yellow-500 text-white rounded-lg shadow-lg p-8 hover:shadow-xl hover:scale-105 transition transform cursor-pointer mb-6"
+              className="block"
             >
-              <div className="flex items-center gap-4">
-                <Trophy size={48} />
-                <div>
-                  <h3 className="text-2xl font-bold">Ranking Geral — {discipline?.name}</h3>
-                  <p className="text-sm opacity-90">Ranking com a soma de todos os questionários</p>
+              <GameCard glass className="p-8 hover:shadow-glow transition cursor-pointer group">
+                <div className="flex items-center gap-6">
+                  <div className="text-6xl">🏆</div>
+                  <div className="flex-1">
+                    <h3 className="text-2xl font-bold text-ufpa-700 group-hover:text-ufpa-800 transition mb-2">
+                      Ranking Geral — {discipline?.name}
+                    </h3>
+                    <p className="text-gray-600">
+                      Ranking com a soma de todos os questionários respondidos nesta disciplina
+                    </p>
+                  </div>
+                  <div className="text-2xl group-hover:scale-110 transition">→</div>
                 </div>
-              </div>
+              </GameCard>
             </Link>
+          </div>
 
-            {/* Questionários Específicos */}
-            {questionnaires.length > 0 && (
-              <div>
-                <h3 className="text-xl font-bold text-ufpa-700 mb-4">Ranking por Questionário</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {questionnaires.map((questionnaire) => (
-                    <Link
-                      key={questionnaire._id}
-                      to={`/aluno/disciplina/${disciplineId}/ranking?questionnaireId=${questionnaire._id}`}
-                      className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl hover:scale-105 transition transform cursor-pointer border-2 border-ufpa-200"
-                    >
-                      <div className="flex items-start gap-3">
-                        <FileText className="text-ufpa-600 mt-1" size={28} />
-                        <div className="flex-1">
-                          <h4 className="text-lg font-bold text-ufpa-700">{questionnaire.title}</h4>
-                          <p className="text-sm text-gray-600 mt-2">{questionnaire.description}</p>
-                          <p className="text-xs text-ufpa-600 mt-3">Clique para ver o ranking</p>
+          {/* Questionários Específicos */}
+          {questionnaires.length > 0 && (
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <FileText className="text-ufpa-600" size={28} />
+                Rankings por Questionário
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {questionnaires.map((questionnaire, index) => (
+                  <Link
+                    key={questionnaire._id}
+                    to={`/aluno/disciplina/${disciplineId}/ranking?questionnaireId=${questionnaire._id}`}
+                  >
+                    <GameCard glass className="p-6 h-full hover:shadow-glow transition cursor-pointer group">
+                      <div className="flex items-start gap-4">
+                        <div className="text-4xl flex-shrink-0">
+                          {index === 0 && '🥇'}
+                          {index === 1 && '🥈'}
+                          {index === 2 && '🥉'}
+                          {index > 2 && '❓'}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="text-lg font-bold text-gray-900 group-hover:text-ufpa-700 transition truncate">
+                            {questionnaire.title}
+                          </h4>
+                          {questionnaire.description && (
+                            <p className="text-sm text-gray-600 mt-2 line-clamp-2">
+                              {questionnaire.description}
+                            </p>
+                          )}
+                          <div className="flex gap-3 mt-3 text-xs">
+                            <span className="badge-achievement">
+                              📝 {questionnaire.questions.length} questões
+                            </span>
+                            <span className="badge-achievement">
+                              ⭐ {questionnaire.totalPoints} pontos
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    </Link>
-                  ))}
-                </div>
+                    </GameCard>
+                  </Link>
+                ))}
               </div>
-            )}
+            </div>
+          )}
 
-            {questionnaires.length === 0 && (
-              <div className="text-center text-gray-600 bg-white rounded-lg p-8">
-                Nenhum questionário encontrado nesta disciplina
-              </div>
-            )}
+          {questionnaires.length === 0 && (
+            <GameCard glass className="p-12 text-center">
+              <Star className="mx-auto text-gray-400 mb-4" size={48} />
+              <p className="text-gray-600 font-medium text-lg">Nenhum questionário encontrado</p>
+              <p className="text-gray-500 text-sm mt-2">Verifique com seu professor ou volte mais tarde</p>
+            </GameCard>
+          )}
+        </div>
+
+        {/* Footer Info */}
+        <div className="mt-12 text-center text-sm text-gray-600">
+          <p>📊 Clique em qualquer ranking para ver a posição dos alunos</p>
         </div>
       </main>
     </div>

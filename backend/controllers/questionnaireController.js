@@ -1,3 +1,4 @@
+import Answer from '../models/Answer.js';
 import Questionnaire from '../models/Questionnaire.js';
 import { isValidTotalPoints } from '../helpers/validators.js';
 import mongoose from 'mongoose';
@@ -93,6 +94,7 @@ export async function getQuestionnaireById(req, res) {
 export async function getQuestionnaireForAnswering(req, res) {
   try {
     const { id } = req.params;
+    const studentId = req.user.id; // Pega o ID do aluno logado
     
     const questionnaire = await Questionnaire.findById(id)
       .populate('disciplineId', 'name code');
@@ -101,13 +103,25 @@ export async function getQuestionnaireForAnswering(req, res) {
       return res.status(404).json({ error: 'Questionário não encontrado' });
     }
     
-    // Não enviar a resposta correta para o aluno
-    const questionsForStudent = questionnaire.questions.map(q => ({
-      _id: q._id,
-      text: q.text,
-      options: q.options,
-      points: q.points
-    }));
+    // Verifica se este aluno específico já respondeu esse questionário alguma vez
+    const hasAnswered = await Answer.findOne({ questionnaireId: id, studentId });
+    
+    // Mapeia as questões baseado no status da tentativa
+    const questionsForStudent = questionnaire.questions.map(q => {
+      const baseQuestion = {
+        _id: q._id,
+        text: q.text,
+        options: q.options,
+        points: q.points
+      };
+
+      // SE ELE JÁ RESPONDEU ANTES: Liberamos o gabarito no objeto para o modo de revisão!
+      if (hasAnswered) {
+        baseQuestion.correctAnswer = q.correctAnswer;
+      }
+
+      return baseQuestion;
+    });
     
     res.json({
       _id: questionnaire._id,
