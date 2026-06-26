@@ -11,9 +11,16 @@ export default function Sobre() {
     <div className="min-h-screen bg-gradient-to-br from-ufpa-600 to-ufpa-800">
       {/* Header */}
       <header className="bg-gradient-to-r from-ufpa-700 to-ufpa-900 text-white shadow-lg">
-        <div className="max-w-6xl mx-auto px-4 py-6 flex justify-between items-center">
-          <h1 className="text-3xl font-bold">UFPA Gamificação</h1>
-          <div className="flex gap-4">
+  <div className="max-w-6xl mx-auto px-4 py-6 flex justify-between items-center">
+    <div className="flex items-center gap-3">
+      <img 
+        src="/study-ranking-logo.png"
+        alt="Study Ranking Logo"
+        className="w-16 h-16 object-contain"
+      />
+      <h1 className="text-3xl font-bold">Study Ranking</h1>
+    </div>
+    <div className="flex gap-4">
             {user ? (
               <>
                 <button
@@ -55,11 +62,10 @@ export default function Sobre() {
       <section className="max-w-6xl mx-auto px-4 py-20 text-white text-center">
         <h2 className="text-5xl font-bold mb-6">Sobre o Sistema de Gamificação</h2>
         <p className="text-xl mb-8 opacity-90">
-          Conheça como o UFPA Gamificação transforma o aprendizado em uma experiência
-          competitiva, engajante e eficaz
+          Conheça como o Study Ranking transforma o aprendizado em uma experiência
+          competitiva, engajante e eficaz.
         </p>
       </section>
-
       {/* About Content */}
       <section className="bg-white py-16">
         <div className="max-w-6xl mx-auto px-4">
@@ -67,7 +73,7 @@ export default function Sobre() {
             <h3 className="text-3xl font-bold text-ufpa-700 mb-6">O que é Gamificação?</h3>
             <p className="text-lg text-gray-700 mb-4">
               Gamificação é a aplicação de elementos e mecânicas de jogos em contextos não-lúdicos,
-              como a educação. No UFPA Gamificação, utilizamos conceitos de competição saudável,
+              como a educação. No Study Ranking, utilizamos conceitos de competição saudável,
               pontuação e rankings para motivar e engajar alunos no processo de aprendizagem.
             </p>
             <p className="text-lg text-gray-700">
@@ -128,8 +134,7 @@ export default function Sobre() {
                 </div>
                 <h4 className="text-xl font-bold text-ufpa-700 mb-2">Registre-se</h4>
                 <p className="text-gray-600">
-                  Crie sua conta como professor ou aluno. Professores precisam validar CNPJ, alunos precisam
-                  validar matrícula UFPA
+                  Crie sua conta como professor ou aluno. Professores e alunos precisam validar sua matrícula UFPA.
                 </p>
               </div>
 
@@ -247,12 +252,12 @@ export default function Sobre() {
 
                     <div className="text-center">
             <h3 className="text-3xl font-bold text-ufpa-700 mb-6">
-              {user ? 'Bem-vindo ao UFPA Gamificação!' : 'Comece Agora'}
+              {user ? 'Bem-vindo ao Study Ranking!' : 'Comece Agora'}
             </h3>
             <p className="text-lg text-gray-700 mb-8">
               {user
                 ? 'Explore todos os recursos do sistema de gamificação'
-                : 'Junte-se ao UFPA Gamificação e transforme sua experiência de aprendizagem'}
+                : 'Junte-se ao Study Ranking e transforme sua experiência de aprendizagem'}
             </p>
             {!user && (
               <div className="flex gap-4 justify-center">
@@ -275,9 +280,19 @@ export default function Sobre() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-ufpa-900 text-white text-center py-8">
-        <p>&copy; 2024 UFPA Gamificação. Todos os direitos reservados.</p>
-      </footer>
+      <footer className="bg-ufpa-900 text-white py-8">
+  <div className="max-w-6xl mx-auto px-4 flex items-center justify-center gap-6">
+    <img 
+      src="/brasao-ufpa.png"
+      alt="UFPA Logo"
+      className="w-14 h-14 object-contain"
+    />
+    <div className="text-center">
+      <p>&copy; 2024 Study Ranking. Todos os direitos reservados.</p>
+      <p className="text-sm text-gray-400 mt-1">UFPA Campus Castanhal</p>
+    </div>
+  </div>
+</footer>
     </div>
   );
 }

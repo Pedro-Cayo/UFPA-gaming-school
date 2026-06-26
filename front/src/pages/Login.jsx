@@ -34,7 +34,7 @@ export default function Login() {
       <div className="w-full max-w-md">
         <div className="bg-white rounded-lg shadow-2xl p-8">
           <h1 className="text-3xl font-bold text-center text-ufpa-700 mb-8">
-            UFPA Gamificação
+            Study Ranking
           </h1>
 
           {error && (

@@ -69,9 +69,16 @@ export default function Home() {
       <div className="min-h-screen bg-gradient-to-br from-ufpa-50 to-ufpa-100">
         {/* Header */}
         <header className="bg-gradient-to-r from-ufpa-600 to-ufpa-800 text-white shadow-lg">
-          <div className="max-w-6xl mx-auto px-4 py-6 flex justify-between items-center">
-            <h1 className="text-3xl font-bold">Study Ranking</h1>
-            <div className="flex gap-4">
+  <div className="max-w-6xl mx-auto px-4 py-6 flex justify-between items-center">
+    <div className="flex items-center gap-3">
+      <img 
+        src="/study-ranking-logo.png"
+        alt="Study Ranking Logo"
+        className="w-16 h-16 object-contain"
+      />
+      <h1 className="text-3xl font-bold">Study Ranking</h1>
+    </div>
+    <div className="flex gap-4">
               <Link
                 to="/sobre"
                 className="bg-ufpa-500 hover:bg-ufpa-600 px-6 py-2 rounded-lg font-semibold transition"
@@ -221,9 +228,19 @@ export default function Home() {
         </main>
 
         {/* Footer */}
-        <footer className="bg-ufpa-900 text-white text-center py-8">
-          <p>&copy; 2024 UFPA Gamificação. Todos os direitos reservados.</p>
-        </footer>
+        <footer className="bg-ufpa-900 text-white py-8">
+  <div className="max-w-6xl mx-auto px-4 flex items-center justify-center gap-6">
+    <img 
+      src="/brasao-ufpa.png"
+      alt="UFPA Logo"
+      className="w-14 h-14 object-contain"
+    />
+    <div className="text-center">
+      <p>&copy; 2026 Study Ranking. Todos os direitos reservados.</p>
+      <p className="text-sm text-gray-400 mt-1">UFPA Campus Castanhal</p>
+    </div>
+  </div>
+</footer>
       </div>
     );
   }
